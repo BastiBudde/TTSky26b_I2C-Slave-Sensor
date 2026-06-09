@@ -1,0 +1,24 @@
+[tasks]
+taskcover prove_cover
+taskbmc prove_bmc
+
+[options]
+prove_cover: mode cover
+prove_cover: depth 250
+prove_bmc: mode bmc
+
+[engines]
+smtbmc
+
+[files]
+../../src/reg_block.v
+../../src/lfsr_writer.v
+../../src/i2c_slave.v
+
+[script]
+read -formal reg_block.v
+prep -top reg_block
+read -formal lfsr_writer.v
+prep -top lfsr_writer
+read -formal i2c_slave.v
+prep -top i2c_slave

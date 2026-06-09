@@ -238,4 +238,40 @@ always @(posedge clk) begin
         end
 end
 
+
+
+//---------------------------------------------------------------------------------
+//----------------------------- Formal Verification -------------------------------
+//---------------------------------------------------------------------------------
+
+`ifdef FORMAL
+
+        reg f_past_valid = 0;
+
+        initial assume(N_RST == 0);
+        always @(posedge clk) begin
+                f_past_valid <= 1;
+                if(f_past_valid) begin
+
+                        // Cover Mode
+                        // test if all required state transitions are reachable
+                        begin : _c_idle
+                                cover($past(N_RST) == 0 && state == S_IDLE);
+                                cover($past(state) == S_IDLE && state == S_IDLE);
+                                cover($past(state) == S_READ && $past(master_ack) == 0 && state == S_IDLE);
+                        end
+                        _c_rcv_addr: cover($past(start_pending) == 1 && state == S_RCV_ADDR);
+                        _c_rcv_ptr: cover($past(state) == S_RCV_ADDR && $past(address_detect) == 1 && $past(read_write_bit) == 0 && state == S_RCV_PTR);
+                        _c_write: cover($past(state) == S_RCV_PTR && state == S_WRITE);
+                        _c_read: cover($past(state) == S_RCV_ADDR && $past(read_write_bit) == 1 && state == S_READ);
+
+                        // BMC Checks
+                        if($past(N_RST) == 0)
+                                _a_reset_idle: assert(state == S_IDLE);
+                        if($past(stop_detect) == 1)
+                                _a_stop_cond_idle: assert(state == S_IDLE);
+                end
+        end
+`endif
+
 endmodule

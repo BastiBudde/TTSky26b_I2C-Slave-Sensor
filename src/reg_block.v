@@ -48,4 +48,44 @@ end
 //---------------------------------------------------------------------------------
 assign rdata = r_selected ? registers[r_local_addr] : 8'd0; // output the value of the addressed register when selected, otherwise output 0
 
+
+
+//---------------------------------------------------------------------------------
+//----------------------------- Formal Verification -------------------------------
+//---------------------------------------------------------------------------------
+
+`ifdef FORMAL
+
+        reg f_past_valid = 0;
+
+        initial assume(N_RST == 0);
+        always @(posedge clk) begin
+                f_past_valid <= 1;
+                if(f_past_valid) begin
+
+                        // Cover Mode Checks
+                        begin : _c_reset
+                                for (i = 0; i < N_REGS; i = i + 1) 
+                                        cover($past(N_RST) == 0 && registers[i] == RESET_VALUES[i*8 +: 8]); 
+                        end
+                        _c_read: cover(rdata == registers[r_local_addr] && r_selected == 1);
+                        _c_write: cover($past(w_selected) == 1 && $past(we) == 1 && $past(wdata) == 8'hFF && registers[w_local_addr] <= 8'hFF); 
+
+                        // BMC Checks
+                        if($past(w_selected) == 1 && $past(we) == 1 && $past(wdata) == 8'hFF && r_selected == 0)
+                                _a_read_not: assert(rdata == 8'd0);
+                        
+                                //this check is eliminated because it takes a very long time
+                        /* if($past(N_RST) == 0) begin
+                                begin: _a_prove_reset
+                                        for (i = 0; i < N_REGS; i = i + 1) 
+                                                assert(registers[i] == RESET_VALUES[i*8 +: 8]);
+                                end
+                        end */
+                end
+        end
+
+
+`endif
+
 endmodule

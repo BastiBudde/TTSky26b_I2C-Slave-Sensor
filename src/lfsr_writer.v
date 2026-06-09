@@ -55,4 +55,32 @@ module lfsr_writer #(
         else
             we <= tick;
     end
+
+
+//---------------------------------------------------------------------------------
+//----------------------------- Formal Verification -------------------------------
+//---------------------------------------------------------------------------------
+
+`ifdef FORMAL
+    reg f_past_valid = 0;
+
+            initial assume(N_RST == 0);
+            always @(posedge clk) begin
+                    f_past_valid <= 1;
+
+                    if(f_past_valid) begin
+
+                        // Cover Mode Checks
+                        _c_reset: cover($past(N_RST) == 0 && lfsr == SEED);
+                        _c_active_writing: cover($past(lfsr) != lfsr);
+                        _c_max_pattern: cover(lfsr == 8'hFF);
+
+                        // BMC checks
+                        if(tick == 1)
+                            _a_generate_write_signal: assert(we == 1);
+                    end
+            end
+    `endif
+
+
 endmodule
