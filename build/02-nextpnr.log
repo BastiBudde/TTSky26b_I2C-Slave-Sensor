@@ -1,0 +1,258 @@
+Info: constrained 'clk' to bel 'X19/Y0/io1'
+Info: constrained 'rst_n' to bel 'X13/Y31/io0'
+Info: constrained 'ui_in[0]' to bel 'X19/Y0/io0'
+Info: constrained 'ui_in[1]' to bel 'X21/Y0/io1'
+Info: constrained 'ui_in[2]' to bel 'X22/Y0/io1'
+Info: constrained 'ui_in[3]' to bel 'X18/Y0/io1'
+Info: constrained 'ui_in[4]' to bel 'X19/Y31/io0'
+Info: constrained 'ui_in[5]' to bel 'X19/Y31/io1'
+Info: constrained 'ui_in[6]' to bel 'X18/Y31/io0'
+Info: constrained 'ui_in[7]' to bel 'X18/Y31/io1'
+Info: constrained 'uio[0]' to bel 'X8/Y0/io0'
+Info: constrained 'uio[1]' to bel 'X9/Y0/io0'
+Info: constrained 'uio[2]' to bel 'X9/Y0/io1'
+Info: constrained 'uio[3]' to bel 'X13/Y0/io1'
+Info: constrained 'uio[4]' to bel 'X15/Y0/io0'
+Info: constrained 'uio[5]' to bel 'X16/Y0/io0'
+Info: constrained 'uio[6]' to bel 'X17/Y0/io0'
+Info: constrained 'uio[7]' to bel 'X18/Y0/io0'
+Info: constrained 'uo_out[0]' to bel 'X8/Y31/io1'
+Info: constrained 'uo_out[1]' to bel 'X8/Y31/io0'
+Info: constrained 'uo_out[2]' to bel 'X9/Y31/io0'
+Info: constrained 'uo_out[3]' to bel 'X6/Y0/io1'
+Info: constrained 'uo_out[4]' to bel 'X7/Y0/io1'
+Info: constrained 'uo_out[5]' to bel 'X5/Y0/io0'
+Info: constrained 'uo_out[6]' to bel 'X6/Y0/io0'
+Info: constrained 'uo_out[7]' to bel 'X7/Y0/io0'
+
+Info: Packing constants..
+Info: Packing IOs..
+Info: uio[7] feeds SB_IO uio_pin[7], removing $nextpnr_iobuf uio[7].
+Info: uio[6] feeds SB_IO uio_pin[6], removing $nextpnr_iobuf uio[6].
+Info: uio[5] feeds SB_IO uio_pin[5], removing $nextpnr_iobuf uio[5].
+Info: uio[4] feeds SB_IO uio_pin[4], removing $nextpnr_iobuf uio[4].
+Info: uio[3] feeds SB_IO uio_pin[3], removing $nextpnr_iobuf uio[3].
+Info: uio[2] feeds SB_IO uio_pin[2], removing $nextpnr_iobuf uio[2].
+Info: uio[1] feeds SB_IO uio_pin[1], removing $nextpnr_iobuf uio[1].
+Info: uio[0] feeds SB_IO uio_pin[0], removing $nextpnr_iobuf uio[0].
+Info: Packing LUT-FFs..
+Info:      198 LCs used as LUT4 only
+Info:       48 LCs used as LUT4 and DFF
+Info: Packing non-LUT FFs..
+Info:      162 LCs used as DFF only
+Info: Packing carries..
+Info:        7 LCs used as CARRY only
+Info: Packing indirect carry+LUT pairs...
+Info:        1 LUTs merged into carry LCs
+Info: Packing RAMs..
+Info: Placing PLLs..
+Info: Packing special functions..
+Info: Packing PLLs..
+Info: Promoting globals..
+Info: promoting clk$SB_IO_IN (fanout 210)
+Info: promoting rst_n_SB_LUT4_I3_O [reset] (fanout 54)
+Info: Constraining chains...
+Info:        8 LCs used to legalise carry chains.
+Info: Checksum: 0x1ec2b589
+
+Info: Device utilisation:
+Info: 	         ICESTORM_LC:     424/   5280     8%
+Info: 	        ICESTORM_RAM:       0/     30     0%
+Info: 	               SB_IO:      26/     39    66%
+Info: 	               SB_GB:       2/      8    25%
+Info: 	        ICESTORM_PLL:       0/      1     0%
+Info: 	         SB_WARMBOOT:       0/      1     0%
+Info: 	        ICESTORM_DSP:       0/      8     0%
+Info: 	      ICESTORM_HFOSC:       0/      1     0%
+Info: 	      ICESTORM_LFOSC:       0/      1     0%
+Info: 	              SB_I2C:       0/      2     0%
+Info: 	              SB_SPI:       0/      2     0%
+Info: 	              IO_I3C:       0/      2     0%
+Info: 	         SB_LEDDA_IP:       0/      1     0%
+Info: 	         SB_RGBA_DRV:       0/      1     0%
+Info: 	      ICESTORM_SPRAM:       0/      4     0%
+
+Info: Placed 26 cells based on constraints.
+Info: Creating initial analytic placement for 388 cells, random placement wirelen = 10176.
+Info:     at initial placer iter 0, wirelen = 100
+Info:     at initial placer iter 1, wirelen = 100
+Info:     at initial placer iter 2, wirelen = 100
+Info:     at initial placer iter 3, wirelen = 100
+Info: Running main analytical placer, max placement attempts per cell = 25538.
+Info:     at iteration #1, type ALL: wirelen solved = 100, spread = 1583, legal = 1863; time = 0.00s
+Info:     at iteration #2, type ALL: wirelen solved = 126, spread = 1315, legal = 1670; time = 0.01s
+Info:     at iteration #3, type ALL: wirelen solved = 151, spread = 1244, legal = 1590; time = 0.01s
+Info:     at iteration #4, type ALL: wirelen solved = 156, spread = 1172, legal = 1647; time = 0.01s
+Info:     at iteration #5, type ALL: wirelen solved = 267, spread = 1182, legal = 1611; time = 0.01s
+Info:     at iteration #6, type ALL: wirelen solved = 241, spread = 1078, legal = 1563; time = 0.01s
+Info:     at iteration #7, type ALL: wirelen solved = 266, spread = 1100, legal = 1430; time = 0.01s
+Info:     at iteration #8, type ALL: wirelen solved = 339, spread = 1050, legal = 1429; time = 0.01s
+Info:     at iteration #9, type ALL: wirelen solved = 343, spread = 1045, legal = 1289; time = 0.00s
+Info:     at iteration #10, type ALL: wirelen solved = 409, spread = 1015, legal = 1302; time = 0.00s
+Info:     at iteration #11, type ALL: wirelen solved = 365, spread = 970, legal = 1339; time = 0.00s
+Info:     at iteration #12, type ALL: wirelen solved = 426, spread = 1016, legal = 1404; time = 0.00s
+Info:     at iteration #13, type ALL: wirelen solved = 407, spread = 1002, legal = 1408; time = 0.00s
+Info:     at iteration #14, type ALL: wirelen solved = 471, spread = 1060, legal = 1378; time = 0.00s
+Info: HeAP Placer Time: 0.09s
+Info:   of which solving equations: 0.06s
+Info:   of which spreading cells: 0.00s
+Info:   of which strict legalisation: 0.02s
+
+Info: Running simulated annealing placer for refinement.
+Info:   at iteration #1: temp = 0.000000, timing cost = 201, wirelen = 1289
+Info:   at iteration #5: temp = 0.000000, timing cost = 148, wirelen = 1060
+Info:   at iteration #10: temp = 0.000000, timing cost = 142, wirelen = 978
+Info:   at iteration #15: temp = 0.000000, timing cost = 174, wirelen = 960
+Info:   at iteration #20: temp = 0.000000, timing cost = 161, wirelen = 912
+Info:   at iteration #24: temp = 0.000000, timing cost = 162, wirelen = 887 
+Info: SA placement time 0.09s
+
+Info: Max frequency for clock 'clk$SB_IO_IN_$glb_clk': 45.95 MHz (PASS at 12.00 MHz)
+
+Info: Max delay <async>                       -> posedge clk$SB_IO_IN_$glb_clk: 18.71 ns
+Info: Max delay posedge clk$SB_IO_IN_$glb_clk -> <async>                      : 7.82 ns
+
+Info: Slack histogram:
+Info:  legend: * represents 1 endpoint(s)
+Info:          + represents [1,1) endpoint(s)
+Info: [ 61572,  62468) |****+
+Info: [ 62468,  63364) | 
+Info: [ 63364,  64260) |**+
+Info: [ 64260,  65156) |*+
+Info: [ 65156,  66052) |******************+
+Info: [ 66052,  66948) |****************************** 
+Info: [ 66948,  67844) |********+
+Info: [ 67844,  68740) |********************************+
+Info: [ 68740,  69636) |*****************************+
+Info: [ 69636,  70532) |***********************+
+Info: [ 70532,  71428) |***************+
+Info: [ 71428,  72324) |*******+
+Info: [ 72324,  73220) |**************+
+Info: [ 73220,  74116) |********+
+Info: [ 74116,  75012) |*****+
+Info: [ 75012,  75908) |*******+
+Info: [ 75908,  76804) |*****+
+Info: [ 76804,  77700) |*********************+
+Info: [ 77700,  78596) |************************************************************ 
+Info: [ 78596,  79492) |****************************************+
+Info: Checksum: 0xbfd0ec07
+
+Info: Routing..
+Info: Setting up routing queue.
+Info: Routing 1185 arcs.
+Info:            |   (re-)routed arcs  |   delta    | remaining|       time spent     |
+Info:    IterCnt |  w/ripup   wo/ripup |  w/r  wo/r |      arcs| batch(sec) total(sec)|
+Info:       1000 |      119        867 |  119   867 |       352|       0.06       0.06|
+Info:       1413 |      169       1212 |   50   345 |         0|       0.05       0.10|
+Info: Routing complete.
+Info: Router1 time 0.10s
+Info: Checksum: 0xc9c2823d
+
+Info: Critical path report for clock 'clk$SB_IO_IN_$glb_clk' (posedge -> posedge):
+Info:       type curr  total name
+Info:   clk-to-q  1.39  1.39 Source user_project.top_level_inst.i2c_inst.state_SB_DFF_Q_1_D_SB_LUT4_O_LC.O
+Info:    routing  1.76  3.15 Net user_project.top_level_inst.i2c_inst.state[3] (5,1) -> (4,1)
+Info:                          Sink user_project.top_level_inst.i2c_inst.master_ack_SB_LUT4_I1_O_SB_LUT4_O_I3_SB_LUT4_O_I3_SB_LUT4_O_LC.I0
+Info:      logic  1.28  4.43 Source user_project.top_level_inst.i2c_inst.master_ack_SB_LUT4_I1_O_SB_LUT4_O_I3_SB_LUT4_O_I3_SB_LUT4_O_LC.O
+Info:    routing  1.76  6.20 Net user_project.top_level_inst.i2c_inst.master_ack_SB_LUT4_I1_O_SB_LUT4_O_I3_SB_LUT4_O_I3[0] (4,1) -> (4,1)
+Info:                          Sink user_project.top_level_inst.i2c_inst.master_ack_SB_LUT4_I1_O_SB_LUT4_O_I3_SB_LUT4_O_LC.I2
+Info:                          Defined in:
+Info:                               /Users/basti/Documents/01-UNI-MASTER/SS26/Chip_Design/oss-cad-suite/libexec/../share/yosys/ice40/cells_map.v:6.21-6.22
+Info:      logic  1.21  7.40 Source user_project.top_level_inst.i2c_inst.master_ack_SB_LUT4_I1_O_SB_LUT4_O_I3_SB_LUT4_O_LC.O
+Info:    routing  2.30  9.70 Net user_project.top_level_inst.i2c_inst.master_ack_SB_LUT4_I1_O_SB_LUT4_O_I3[2] (4,1) -> (7,1)
+Info:                          Sink user_project.top_level_inst.i2c_inst.master_ack_SB_LUT4_I1_I3_SB_LUT4_O_LC.I3
+Info:                          Defined in:
+Info:                               /Users/basti/Documents/01-UNI-MASTER/SS26/Chip_Design/oss-cad-suite/libexec/../share/yosys/ice40/cells_map.v:6.21-6.22
+Info:      logic  0.87  10.58 Source user_project.top_level_inst.i2c_inst.master_ack_SB_LUT4_I1_I3_SB_LUT4_O_LC.O
+Info:    routing  1.76  12.34 Net user_project.top_level_inst.i2c_inst.master_ack_SB_LUT4_I1_I3[3] (7,1) -> (7,2)
+Info:                          Sink user_project.top_level_inst.i2c_inst.master_ack_SB_LUT4_I1_I3_SB_LUT4_I3_LC.I3
+Info:                          Defined in:
+Info:                               /Users/basti/Documents/01-UNI-MASTER/SS26/Chip_Design/oss-cad-suite/libexec/../share/yosys/ice40/cells_map.v:6.21-6.22
+Info:      logic  0.87  13.21 Source user_project.top_level_inst.i2c_inst.master_ack_SB_LUT4_I1_I3_SB_LUT4_I3_LC.O
+Info:    routing  1.76  14.98 Net user_project.top_level_inst.i2c_inst.reg_write_SB_LUT4_I2_I3[1] (7,2) -> (7,2)
+Info:                          Sink user_project.top_level_inst.i2c_inst.reg_write_SB_LUT4_I2_LC.I3
+Info:                          Defined in:
+Info:                               /Users/basti/Documents/01-UNI-MASTER/SS26/Chip_Design/oss-cad-suite/libexec/../share/yosys/ice40/cells_map.v:6.21-6.22
+Info:      logic  0.87  15.85 Source user_project.top_level_inst.i2c_inst.reg_write_SB_LUT4_I2_LC.O
+Info:    routing  2.30  18.15 Net user_project.top_level_inst.i2c_inst.reg_addr_SB_DFFESR_Q_6_D[2] (7,2) -> (5,2)
+Info:                          Sink user_project.top_level_inst.i2c_inst.reg_write_SB_LUT4_I2_O_SB_LUT4_I3_LC.I3
+Info:                          Defined in:
+Info:                               /Users/basti/Documents/01-UNI-MASTER/SS26/Chip_Design/oss-cad-suite/libexec/../share/yosys/ice40/cells_map.v:6.21-6.22
+Info:      logic  0.87  19.03 Source user_project.top_level_inst.i2c_inst.reg_write_SB_LUT4_I2_O_SB_LUT4_I3_LC.O
+Info:    routing  3.64  22.67 Net user_project.top_level_inst.i2c_inst.reg_write_SB_LUT4_I2_O_SB_LUT4_I3_O (5,2) -> (5,3)
+Info:                          Sink user_project.top_level_inst.i2c_inst.reg_addr_SB_DFFESR_Q_D_SB_LUT4_O_LC.CEN
+Info:      setup  0.10  22.77 Source user_project.top_level_inst.i2c_inst.reg_addr_SB_DFFESR_Q_D_SB_LUT4_O_LC.CEN
+Info: 7.47 ns logic, 15.29 ns routing
+
+Info: Critical path report for cross-domain path '<async>' -> 'posedge clk$SB_IO_IN_$glb_clk':
+Info:       type curr  total name
+Info:     source  0.00  0.00 Source rst_n$sb_io.D_IN_0
+Info:    routing  7.49  7.49 Net rst_n$SB_IO_IN (13,31) -> (11,2)
+Info:                          Sink user_project.top_level_inst.lfsr_inst.we_SB_LUT4_I2_LC.I1
+Info:                          Defined in:
+Info:                               /Users/basti/Documents/01-UNI-MASTER/SS26/Chip_Design/TSky26b-I2C_Slave/src/reg_block.v:8.28-8.33
+Info:      logic  1.23  8.72 Source user_project.top_level_inst.lfsr_inst.we_SB_LUT4_I2_LC.O
+Info:    routing  1.76  10.48 Net user_project.top_level_inst.lfsr_inst.we_SB_LUT4_I2_O[1] (11,2) -> (11,3)
+Info:                          Sink user_project.top_level_inst.lfsr_inst.we_SB_LUT4_I2_O_SB_LUT4_I3_LC.I3
+Info:                          Defined in:
+Info:                               /Users/basti/Documents/01-UNI-MASTER/SS26/Chip_Design/oss-cad-suite/libexec/../share/yosys/ice40/cells_map.v:6.21-6.22
+Info:      logic  0.87  11.35 Source user_project.top_level_inst.lfsr_inst.we_SB_LUT4_I2_O_SB_LUT4_I3_LC.O
+Info:    routing  2.95  14.31 Net user_project.top_level_inst.lfsr_inst.we_SB_LUT4_I2_O_SB_LUT4_I3_O[2] (11,3) -> (11,7)
+Info:                          Sink user_project.top_level_inst.lfsr_inst.we_SB_LUT4_I2_O_SB_LUT4_I3_O_SB_LUT4_I3_3_LC.I3
+Info:                          Defined in:
+Info:                               /Users/basti/Documents/01-UNI-MASTER/SS26/Chip_Design/oss-cad-suite/libexec/../share/yosys/ice40/cells_map.v:6.21-6.22
+Info:      logic  0.87  15.18 Source user_project.top_level_inst.lfsr_inst.we_SB_LUT4_I2_O_SB_LUT4_I3_O_SB_LUT4_I3_3_LC.O
+Info:    routing  1.76  16.94 Net user_project.top_level_inst.lfsr_inst.we_SB_LUT4_I2_O_SB_LUT4_I3_O_SB_LUT4_I3_3_O[1] (11,7) -> (11,8)
+Info:                          Sink user_project.top_level_inst.lfsr_inst.we_SB_LUT4_I2_O_SB_LUT4_I3_O_SB_LUT4_I3_3_O_SB_LUT4_I3_LC.I3
+Info:                          Defined in:
+Info:                               /Users/basti/Documents/01-UNI-MASTER/SS26/Chip_Design/oss-cad-suite/libexec/../share/yosys/ice40/cells_map.v:6.21-6.22
+Info:      logic  0.87  17.82 Source user_project.top_level_inst.lfsr_inst.we_SB_LUT4_I2_O_SB_LUT4_I3_O_SB_LUT4_I3_3_O_SB_LUT4_I3_LC.O
+Info:    routing  2.99  20.81 Net user_project.top_level_inst.reg_block_b.registers[1]_SB_DFFESR_Q_E (11,8) -> (11,8)
+Info:                          Sink user_project.top_level_inst.reg_block_b.registers[1]_SB_DFFESR_Q_1_DFFLC.CEN
+Info:      setup  0.10  20.91 Source user_project.top_level_inst.reg_block_b.registers[1]_SB_DFFESR_Q_1_DFFLC.CEN
+Info: 3.95 ns logic, 16.95 ns routing
+
+Info: Critical path report for cross-domain path 'posedge clk$SB_IO_IN_$glb_clk' -> '<async>':
+Info:       type curr  total name
+Info:   clk-to-q  1.39  1.39 Source user_project.top_level_inst.i2c_inst.output_control_SB_DFFESS_Q_D_SB_LUT4_O_LC.O
+Info:    routing  2.30  3.69 Net user_project.top_level_inst.i2c_inst.output_control (9,2) -> (12,2)
+Info:                          Sink user_project.sda_oe_SB_LUT4_O_LC.I3
+Info:                          Defined in:
+Info:                               /Users/basti/Documents/01-UNI-MASTER/SS26/Chip_Design/TSky26b-I2C_Slave/src/i2c_slave.v:33.13-33.27
+Info:      logic  0.87  4.57 Source user_project.sda_oe_SB_LUT4_O_LC.O
+Info:    routing  2.41  6.98 Net uio_oe[3] (12,2) -> (13,0)
+Info:                          Sink uio_pin[3].OUTPUT_ENABLE
+Info:                          Defined in:
+Info:                               /Users/basti/Documents/01-UNI-MASTER/SS26/Chip_Design/TSky26b-I2C_Slave/src/tt_um_BastiBudde_chip_design_i2c_slave.v:13.23-13.29
+Info: 2.26 ns logic, 4.71 ns routing
+
+Info: Max frequency for clock 'clk$SB_IO_IN_$glb_clk': 43.93 MHz (PASS at 12.00 MHz)
+
+Info: Max delay <async>                       -> posedge clk$SB_IO_IN_$glb_clk: 20.91 ns
+Info: Max delay posedge clk$SB_IO_IN_$glb_clk -> <async>                      : 6.98 ns
+
+Info: Slack histogram:
+Info:  legend: * represents 2 endpoint(s)
+Info:          + represents [1,2) endpoint(s)
+Info: [ 60567,  61507) |***+
+Info: [ 61507,  62447) | 
+Info: [ 62447,  63387) | 
+Info: [ 63387,  64327) |***********+
+Info: [ 64327,  65267) |************************+
+Info: [ 65267,  66207) |**********+
+Info: [ 66207,  67147) |************************+
+Info: [ 67147,  68087) |*********************+
+Info: [ 68087,  69027) |*******************************+
+Info: [ 69027,  69967) |*******+
+Info: [ 69967,  70907) |************+
+Info: [ 70907,  71847) |*************+
+Info: [ 71847,  72787) |****+
+Info: [ 72787,  73727) |***+
+Info: [ 73727,  74667) |*******+
+Info: [ 74667,  75607) |********** 
+Info: [ 75607,  76547) |****+
+Info: [ 76547,  77487) |**********+
+Info: [ 77487,  78427) |************************************************************ 
+Info: [ 78427,  79367) |********************************+
+
+Info: Program finished normally.
