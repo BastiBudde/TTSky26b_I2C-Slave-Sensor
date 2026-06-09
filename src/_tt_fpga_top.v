@@ -23,7 +23,7 @@ module tt_fpga_top (
       .D_IN_0(uio_in),
   );
 
-  tt_um_BastiBudde_chip_design_i2c_slave user_project (
+  tt_um_BastiBudde_i2c_slave_sensor user_project (
       .ui_in(ui_in),
       .uo_out(uo_out),
       .uio_in(uio_in),

@@ -61,7 +61,7 @@ module tb ();
 `endif
 
   // Replace tt_um_example with your module name:
-  tt_um_BastiBudde_chip_design_i2c_slave user_project (
+  tt_um_BastiBudde_i2c_slave_sensor user_project (
 
       // Include power ports for the Gate Level test:
 `ifdef GL_TEST

@@ -5,7 +5,7 @@
 
 `default_nettype none
 
-module tt_um_BastiBudde_chip_design_i2c_slave (
+module tt_um_BastiBudde_i2c_slave_sensor (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
