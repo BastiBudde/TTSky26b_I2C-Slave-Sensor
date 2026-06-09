@@ -1,4 +1,9 @@
-# Running the test
+# Installing required packages
+```
+pip install -r requirements.txt
+```
+
+# Running the cocotb tests
 ```
 cd test
 make
@@ -9,7 +14,12 @@ cd test
 make WAVES=1
 ```
 
-# To open waveforms in GTKwave
+## To open waveforms in GTKwave
 ```
 gtkwave --save tb.gtkw  sim_build/rtl/tb.fst
+```
+# Running Symbiyosys tests
+```
+cd sby  
+sby -f config.sby
 ```
