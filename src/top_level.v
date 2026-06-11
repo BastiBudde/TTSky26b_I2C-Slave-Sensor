@@ -58,7 +58,7 @@ signal_source #(
     .N_RST     (N_RST),
     .phase_inc (16'd1024),          // fixed for now; Block A config later
     .raddr     (reg_addr_i2c),
-    .rdata     (data_out_blok_b)
+    .rdata     (data_out_block_b)
 );
 
 //-----------------------------------------------------------------------
