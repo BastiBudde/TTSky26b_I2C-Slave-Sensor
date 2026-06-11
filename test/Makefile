@@ -6,7 +6,17 @@ SIM ?= icarus
 FST ?= -fst # Use more efficient FST format
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = tt_um_BastiBudde_i2c_slave_sensor.v top_level.v i2c_slave.v reg_block.v lfsr_writer.v
+PROJECT_SOURCES = 	tt_um_BastiBudde_i2c_slave_sensor.v \
+					 top_level.v \
+					 i2c_slave.v \
+					 reg_block.v \
+					 lfsr_writer.v \
+					 lfsr8.v \
+					 phase_accumulator.v \
+					 signal_bank.v \
+					 signal_source.v \
+					 sine_lut.v\
+					 waveform_gen.v
 
 
 ifneq ($(GATES),yes)
