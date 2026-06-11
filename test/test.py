@@ -524,7 +524,7 @@ async def test_unmapped_address(dut, speed):
 #----------------------------- Block B is read-only ------------------------------
 #---------------------------------------------------------------------------------
 @cocotb.test()
-@cocotb.parametrize(speed=[400e3, 1e6])
+@cocotb.parametrize(speed=[100e4, 400e3])
 async def test_block_b_is_read_only(dut, speed):
     """A write attempt to a Block B address must not change the value.
 
