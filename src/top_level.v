@@ -47,19 +47,19 @@ i2c_slave i2c_inst (
 );
 
 //-----------------------------------------------------------------------
-//------------- lfsr random number generator for reg_block_b ------------
+//----------------- DDS Signal source - Master readonly -----------------
 //-----------------------------------------------------------------------
-lfsr_writer #(
-    .BASE_ADDR      (BASE_ADDR_BLOCK_B),
-    .N_REGS         (N_REGS_BLOCK_B)
-) lfsr_inst (
-    .clk            (clk),
-    .N_RST          (N_RST),     
-    .waddr          (reg_addr_lfsr),
-    .wdata          (data_from_lfsr),
-    .we             (reg_write_lfsr)
+signal_source #(
+    .BASE_ADDR (BASE_ADDR_BLOCK_B),
+    .N_REGS    (N_REGS_BLOCK_B)
+    // RESET_VALUES default = zeros; status slot reads 0 until implemented
+) signal_source_b (
+    .clk       (clk),
+    .N_RST     (N_RST),
+    .phase_inc (16'd1024),          // fixed for now; Block A config later
+    .raddr     (reg_addr_i2c),
+    .rdata     (data_out_blok_b)
 );
-
 
 //-----------------------------------------------------------------------
 //----------------- Register Block A - Master writable ------------------
@@ -76,18 +76,6 @@ reg_block #(
     .raddr(reg_addr_i2c), .rdata(data_out_block_a)
 );
 
-//-----------------------------------------------------------------------
-//---------------- Register Block B - Master read-only ------------------
-//-----------------------------------------------------------------------
-reg_block #(
-    .BASE_ADDR      (BASE_ADDR_BLOCK_B),
-    .N_REGS         (N_REGS_BLOCK_B)
-) reg_block_b (
-    .clk        (clk),
-    .N_RST      (N_RST),
-    .waddr(reg_addr_lfsr), .wdata(data_from_lfsr), .we(reg_write_lfsr),
-    .raddr(reg_addr_i2c),  .rdata(data_out_block_b)
-);
 
 //-----------------------------------------------------------------------
 //------- Register Block C - Constant signature (read-only, no writer) --
