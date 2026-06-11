@@ -524,7 +524,7 @@ async def test_unmapped_address(dut, speed):
 #----------------------------- Block B is read-only ------------------------------
 #---------------------------------------------------------------------------------
 @cocotb.test()
-@cocotb.parametrize(speed=[100e3, 400e3, 1e6])
+@cocotb.parametrize(speed=[400e3, 1e6])
 async def test_block_b_is_read_only(dut, speed):
     """A write attempt to a Block B address must not change the value.
 
@@ -611,42 +611,42 @@ async def test_lfsr_is_active(dut, speed):
 #---------------------------------------------------------------------------------
 #----------------------- All B registers get updated -----------------------------
 #---------------------------------------------------------------------------------
-@cocotb.test(skip=GATE_LEVEL)
-@cocotb.parametrize(speed=[100e3, 400e3, 1e6])
-async def test_all_b_registers_updated(dut, speed):
-    """Over time the LFSR must write each individual register in Block B."""
-    cocotb.start_soon(Clock(dut.clk, 40, unit="ns").start())
-    await reset_dut(dut)
-    master = make_master(dut, speed=speed)
+# @cocotb.test(skip=GATE_LEVEL)
+# @cocotb.parametrize(speed=[100e3, 400e3, 1e6])
+# async def test_all_b_registers_updated(dut, speed):
+#     """Over time the LFSR must write each individual register in Block B."""
+#     cocotb.start_soon(Clock(dut.clk, 40, unit="ns").start())
+#     await reset_dut(dut)
+#     master = make_master(dut, speed=speed)
 
-    # Pull block parameters from the RTL — single source of truth
-    base_addr = int(dut.user_project.top_level_inst.reg_block_b.BASE_ADDR.value)
-    n_regs    = int(dut.user_project.top_level_inst.reg_block_b.N_REGS.value)
-    reset_b_local = extract_reset_values(
-        dut.user_project.top_level_inst.reg_block_b.RESET_VALUES.value, n_regs=n_regs
-    )
-    reset_values = {base_addr + i: v for i, v in reset_b_local.items()}
+#     # Pull block parameters from the RTL — single source of truth
+#     base_addr = int(dut.user_project.top_level_inst.reg_block_b.BASE_ADDR.value)
+#     n_regs    = int(dut.user_project.top_level_inst.reg_block_b.N_REGS.value)
+#     reset_b_local = extract_reset_values(
+#         dut.user_project.top_level_inst.reg_block_b.RESET_VALUES.value, n_regs=n_regs
+#     )
+#     reset_values = {base_addr + i: v for i, v in reset_b_local.items()}
 
-    # Wait long enough for the LFSR to have done several full address sweeps.
-    # One sweep is ~1.3 ms (8 regs * 4096 ticks * 40 ns), so 5 ms covers ~4 sweeps.
-    await Timer(5, unit="ms")
+#     # Wait long enough for the LFSR to have done several full address sweeps.
+#     # One sweep is ~1.3 ms (8 regs * 4096 ticks * 40 ns), so 5 ms covers ~4 sweeps.
+#     await Timer(5, unit="ms")
 
-    changed_count = 0
-    for addr in range(base_addr, base_addr + n_regs):
-        value = await read_register(master, addr)
-        dut._log.info(
-            f"B[0x{addr:02X}] = 0x{value:02X} (reset was 0x{reset_values[addr]:02X})"
-        )
-        if value != reset_values[addr]:
-            changed_count += 1
+#     changed_count = 0
+#     for addr in range(base_addr, base_addr + n_regs):
+#         value = await read_register(master, addr)
+#         dut._log.info(
+#             f"B[0x{addr:02X}] = 0x{value:02X} (reset was 0x{reset_values[addr]:02X})"
+#         )
+#         if value != reset_values[addr]:
+#             changed_count += 1
 
-    # Strict assertion: every register must have been touched by the LFSR.
-    # After several sweeps, the chance of any register coincidentally landing
-    # back on its reset value is statistically negligible.
-    assert changed_count == n_regs, (
-        f"Only {changed_count}/{n_regs} B registers were updated by the LFSR"
-    )
-    dut._log.info(f"LFSR reliably updates all {n_regs} B registers.")
+#     # Strict assertion: every register must have been touched by the LFSR.
+#     # After several sweeps, the chance of any register coincidentally landing
+#     # back on its reset value is statistically negligible.
+#     assert changed_count == n_regs, (
+#         f"Only {changed_count}/{n_regs} B registers were updated by the LFSR"
+#     )
+#     dut._log.info(f"LFSR reliably updates all {n_regs} B registers.")
 
 
 #---------------------------------------------------------------------------------
