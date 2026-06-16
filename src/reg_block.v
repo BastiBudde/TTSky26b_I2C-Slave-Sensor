@@ -12,7 +12,7 @@ module reg_block #(
         input  wire        we,
         // Lese-Port (in deinem Fall: I²C-Slave)
         input  wire [7:0]  raddr,
-        output wire [7:0]  rdata
+        output wire [7:0]  rdata,
 
         output [N_REGS*8-1:0] regs_flat
 );
