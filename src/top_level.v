@@ -25,6 +25,9 @@ wire [7:0]  reg_addr_lfsr;
 wire [7:0]  data_from_lfsr;
 wire        reg_write_lfsr;
 
+wire        read_strobe_i2c; 
+wire [7:0]  read_addr_i2c;
+
 // Internal wires to connect multiple register blocks to the I2C slave
 wire [7:0] data_out_block_a, data_out_block_b, data_out_block_c;
 
@@ -43,7 +46,9 @@ i2c_slave i2c_inst (
     .reg_addr   (reg_addr_i2c),
     .data_in    (data_to_i2c),
     .data_out   (data_from_i2c),
-    .reg_write  (reg_write_i2c)
+    .reg_write  (reg_write_i2c),
+    .read_strobe (read_strobe_i2c),
+    .read_addr   (read_addr_i2c)
 );
 
 //-----------------------------------------------------------------------
@@ -58,7 +63,9 @@ signal_source #(
     .N_RST     (N_RST),
     .phase_inc (16'd1024),          // fixed for now; Block A config later
     .raddr     (reg_addr_i2c),
-    .rdata     (data_out_block_b)
+    .rdata     (data_out_block_b),
+    .read_strobe (read_strobe_i2c),
+    .read_addr   (read_addr_i2c),
 );
 
 //-----------------------------------------------------------------------

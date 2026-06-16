@@ -19,7 +19,9 @@ module signal_source #(
     input  wire                 N_RST,
     input  wire [ACC_WIDTH-1:0] phase_inc,   // frequency word (Block A later)
     input  wire [7:0]           raddr,
-    output wire [7:0]           rdata
+    output wire [7:0]           rdata,
+    input  wire                 read_strobe,
+    input  wire [7:0]           read_addr
 );
     // --- Tick generator: one pulse every TICK_DIVIDER clocks ---
     localparam CNT_WIDTH = $clog2(TICK_DIVIDER);
@@ -88,6 +90,8 @@ module signal_source #(
         .ch_noisy_sine (w_noisy_sine),
         .ch_noise      (w_noise),
         .raddr         (raddr),
-        .rdata         (rdata)
+        .rdata         (rdata),
+        .read_strobe (read_strobe),
+        .read_addr   (read_addr)
     );
 endmodule

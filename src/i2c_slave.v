@@ -1,15 +1,17 @@
 module i2c_slave #(
         parameter [6:0] DEVICE_ADDRESS = 7'h55
 )(
-        input wire clk,
-        input wire SCL,
-        input  wire sda_in, 
-        output wire sda_oe,
-        input wire N_RST,
-        input wire [7:0] data_in,
-        output reg[7:0] data_out,
-        output reg [7:0] reg_addr,
-        output reg reg_write
+        input   wire       clk,
+        input   wire       SCL,
+        input   wire       sda_in, 
+        output  wire       sda_oe,
+        input   wire       N_RST,
+        input   wire [7:0] data_in,
+        output  reg  [7:0] data_out,
+        output  reg  [7:0] reg_addr,
+        output  reg        reg_write,
+        output  reg        read_strobe,
+        output  reg  [7:0] read_addr
 );
         
         localparam [2:0] S_IDLE         = 3'd0, 
@@ -207,6 +209,44 @@ wire stop_detect = sda_rising && scl_q; // rising edge of SDA while SCL is high 
                                 output_reg <= {output_reg[6:0], 1'b0}; // shift output_reg bits to the left to transmit next bit on SDA
                 end
         end
+
+
+
+//---------------------------------------------------------------------------------
+//------------------- Read-strobe: mark a register as read by master --------------
+//---------------------------------------------------------------------------------
+// output_reg is loaded one byte AHEAD (at lsb_bit), and reg_addr is pre-incremented
+// at ack_bit. So we track the address of the byte currently in the transmit path
+// (tx_addr) and emit the strobe for it once the NEXT load point is reached — i.e.
+// once that byte has been fully shifted out to the master. This is ACK/NACK-
+// independent: the speculatively loaded final byte (NACKed) never gets a strobe.
+reg [7:0] tx_addr;     // address of the byte currently in output_reg
+reg       tx_active;   // a byte has been loaded into the transmit path
+
+always @(posedge clk) begin
+        read_strobe <= 1'b0;                       // default: no strobe
+        if (!N_RST) begin
+                tx_addr   <= 8'd0;
+                tx_active <= 1'b0;
+                read_addr <= 8'd0;
+        end
+        else if (start_detect || stop_detect) begin
+                tx_active <= 1'b0;                 // reset pipeline tracking on (re)start/stop
+        end
+        else if (scl_falling && lsb_bit &&
+                 ((state == S_READ) ||
+                  (state == S_RCV_ADDR && address_detect && read_write_bit))) begin
+                // This is a load point. The byte previously loaded (tx_addr) has now
+                // been fully delivered to the master -> strobe it.
+                if (tx_active) begin
+                        read_strobe <= 1'b1;
+                        read_addr   <= tx_addr;
+                end
+                tx_addr   <= reg_addr;             // address of the byte being loaded now
+                tx_active <= 1'b1;
+        end
+end
+
 
 
 //---------------------------------------------------------------------------------
