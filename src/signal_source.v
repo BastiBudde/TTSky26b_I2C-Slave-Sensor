@@ -62,6 +62,7 @@ module signal_source #(
     lfsr8 #(.SEED(LFSR_SEED)) u_lfsr (
         .clk   (clk),
         .N_RST (N_RST),
+        .en    (tick),
         .value (w_noise)
     );
 
