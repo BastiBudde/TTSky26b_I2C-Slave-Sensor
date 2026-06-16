@@ -28,6 +28,8 @@ wire        reg_write_lfsr;
 wire        read_strobe_i2c; 
 wire [7:0]  read_addr_i2c;
 
+wire [N_REGS_BLOCK_A*8-1:0] cfg_a_flat;
+
 // Internal wires to connect multiple register blocks to the I2C slave
 wire [7:0] data_out_block_a, data_out_block_b, data_out_block_c;
 
@@ -54,6 +56,9 @@ i2c_slave i2c_inst (
 //-----------------------------------------------------------------------
 //----------------- DDS Signal source - Master readonly -----------------
 //-----------------------------------------------------------------------
+// phase_inc = {reg1, reg0} — fällt direkt aus den unteren 16 Bit des flachen Abgriffs
+wire [15:0] phase_inc_cfg = cfg_a_flat[15:0];
+
 signal_source #(
     .BASE_ADDR (BASE_ADDR_BLOCK_B),
     .N_REGS    (N_REGS_BLOCK_B)
@@ -61,7 +66,7 @@ signal_source #(
 ) signal_source_b (
     .clk       (clk),
     .N_RST     (N_RST),
-    .phase_inc (16'd1024),          // fixed for now; Block A config later
+    .phase_inc (phase_inc_cfg),          // fixed for now; Block A config later
     .raddr     (reg_addr_i2c),
     .rdata     (data_out_block_b),
     .read_strobe (read_strobe_i2c),
@@ -74,13 +79,14 @@ signal_source #(
 reg_block #(
     .BASE_ADDR      (BASE_ADDR_BLOCK_A),
     .N_REGS         (N_REGS_BLOCK_A),
-    // Register:        7     6     5     4     3     2     1     0
-    .RESET_VALUES   ({8'h20,8'h74,8'h96,8'h06,8'h42,8'h20,8'h94,8'h76})
+//  Register:        7     6     5     4     3     2    1(H)  0(L)
+    .RESET_VALUES ({8'h00,8'h00,8'h00,8'h00,8'h00,8'h00,8'h04,8'h00})
 ) reg_block_a (
     .clk        (clk),
     .N_RST      (N_RST),
     .waddr(reg_addr_i2c), .wdata(data_from_i2c), .we(reg_write_i2c),
-    .raddr(reg_addr_i2c), .rdata(data_out_block_a)
+    .raddr(reg_addr_i2c), .rdata(data_out_block_a),
+    .regs_flat  (cfg_a_flat)
 );
 
 

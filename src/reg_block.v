@@ -13,6 +13,8 @@ module reg_block #(
         // Lese-Port (in deinem Fall: I²C-Slave)
         input  wire [7:0]  raddr,
         output wire [7:0]  rdata
+
+        output [N_REGS*8-1:0] regs_flat
 );
     
 
@@ -48,6 +50,14 @@ end
 //---------------------------------------------------------------------------------
 assign rdata = r_selected ? registers[r_local_addr] : 8'd0; // output the value of the addressed register when selected, otherwise output 0
 
+
+// bei der Lese-Logik, als kontinuierlicher Parallel-Abgriff aller Register:
+genvar gi;
+generate
+for (gi = 0; gi < N_REGS; gi = gi + 1) begin : gen_flat
+        assign regs_flat[gi*8 +: 8] = registers[gi];
+end
+endgenerate
 
 
 //---------------------------------------------------------------------------------
