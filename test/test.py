@@ -851,3 +851,142 @@ async def test_mixed_stress(dut, speed):
         f"Mixed stress test passed: {n_iterations} random operations, "
         f"shadow model consistent."
     )
+
+
+
+
+
+#---------------------------------------------------------------------------------
+#--------------- Config sweep for waveform viewing (not a pass/fail test) ---------
+#---------------------------------------------------------------------------------
+# Drives Block A configuration through phase_inc, signal amplitude and noise
+# amplitude — first individually, then in combinations — holding each setting
+# long enough to see at least two full waveform periods in the FST.
+#
+# View in the waveform viewer:
+#   phase:    user_project.top_level_inst.signal_source_b.u_phase.phase
+#   channels: user_project.top_level_inst.signal_source_b.u_bank.registers[1..7]
+# (Add explicit $dumpvars lines for u_bank.registers[*] in tb.v — iverilog does
+#  not auto-dump memory arrays. The old reg_block_b dump paths are now stale.)
+
+# --- Design constants: MUST match the RTL parameters ---
+ACC_MAX      = 1 << 16          # ACC_WIDTH = 16
+TICK_DIVIDER = 4096
+CLK_NS       = 40
+TICK_US      = (CLK_NS * 1e-3) * TICK_DIVIDER   # 163.84 us per tick
+
+# Block A configuration register addresses
+REG_PHASE_L  = 0x00
+REG_PHASE_H  = 0x01
+REG_SIG_AMP  = 0x02
+REG_NOISE_AMP= 0x03
+
+# Block B channel addresses
+B_STATUS     = 0x08
+B_FIRST_DATA = 0x09     # sine; +1 cosine, +2 triangle, +3 sawtooth,
+                        # +4 square, +5 noisy_sine, +6 noise
+CH_NAMES = ["sine", "cosine", "triangle", "sawtooth", "square", "noisy_sine", "noise"]
+
+N_PERIODS    = 2.2      # >= 2 periods held per configuration
+DENSE_READ   = False    # True = also read channels over the bus during each hold
+                        #        (shows a bus-side waveform + status flags, slower)
+
+
+def hold_us_for(phase_inc, n_periods=N_PERIODS):
+    """Microseconds needed to display n_periods of the waveform at phase_inc."""
+    period_ticks = ACC_MAX / phase_inc
+    return n_periods * period_ticks * TICK_US
+
+
+async def configure(master, phase_inc, sig_amp_shift, noise_amp_shift):
+    """Bulk-write the four Block A config registers in one transaction."""
+    lo = phase_inc & 0xFF
+    hi = (phase_inc >> 8) & 0xFF
+    payload = [REG_PHASE_L, lo, hi, sig_amp_shift & 0x03, noise_amp_shift & 0x07]
+    acks = await master.write(DEVICE_ADDR, payload)
+    await master.send_stop()
+    assert all(acks), f"Config write not fully ACKed: {acks}"
+
+
+async def read_channels(master):
+    """Snapshot all 7 Block B data channels in one bulk read."""
+    acks = await master.write(DEVICE_ADDR, [B_FIRST_DATA])
+    assert all(acks), "Channel-read pointer set not ACKed"
+    data, addr_acked = await master.read(DEVICE_ADDR, 7)
+    await master.send_stop()
+    assert addr_acked, "Channel read address not ACKed"
+    return list(data)
+
+
+async def hold_and_view(dut, master, phase_inc, label):
+    """Hold the current configuration for >= N_PERIODS, optionally sampling."""
+    total_us = hold_us_for(phase_inc)
+    period_ticks = ACC_MAX // phase_inc
+    dut._log.info(
+        f"  {label}: period = {period_ticks} ticks (~{period_ticks*TICK_US/1000:.2f} ms), "
+        f"holding {N_PERIODS} periods (~{total_us/1000:.2f} ms)"
+    )
+
+    if not DENSE_READ:
+        await Timer(round(total_us), unit="us")
+        snap = await read_channels(master)
+        dut._log.info(f"    snapshot: " +
+                      ", ".join(f"{n}=0x{v:02X}" for n, v in zip(CH_NAMES, snap)))
+    else:
+        # Read ~4 times per period so the bus trace also shows the waveform.
+        n_reads = max(2, round(N_PERIODS * 4))
+        slice_us = total_us / n_reads
+        for _ in range(n_reads):
+            await Timer(round(slice_us), unit="us")
+            snap = await read_channels(master)
+            dut._log.info(f"    sample: " +
+                          ", ".join(f"{n}=0x{v:02X}" for n, v in zip(CH_NAMES, snap)))
+
+
+@cocotb.test(skip=GATE_LEVEL)
+async def test_config_sweep_waveforms(dut):
+    """Sweep configuration parameters for waveform inspection in the FST."""
+    cocotb.start_soon(Clock(dut.clk, CLK_NS, unit="ns").start())
+    await reset_dut(dut)
+    master = make_master(dut, speed=400e3)
+
+    # ---------------------------------------------------------------
+    # 1) Phase increment (frequency) sweep — full amplitude, moderate noise
+    # ---------------------------------------------------------------
+    dut._log.info("=== 1) PHASE INCREMENT SWEEP (amp=full, noise=shift2) ===")
+    for pinc in [1024, 2048, 4096]:
+        await configure(master, phase_inc=pinc, sig_amp_shift=0, noise_amp_shift=2)
+        await hold_and_view(dut, master, pinc, f"phase_inc={pinc}")
+
+    # ---------------------------------------------------------------
+    # 2) Signal amplitude sweep — fixed frequency, moderate noise
+    # ---------------------------------------------------------------
+    dut._log.info("=== 2) SIGNAL AMPLITUDE SWEEP (phase_inc=2048, noise=shift2) ===")
+    for amp in [0, 1, 2, 3]:    # full, half, quarter, eighth
+        await configure(master, phase_inc=2048, sig_amp_shift=amp, noise_amp_shift=2)
+        await hold_and_view(dut, master, 2048, f"sig_amp_shift={amp}")
+
+    # ---------------------------------------------------------------
+    # 3) Noise amplitude sweep — fixed frequency, full signal amplitude
+    # ---------------------------------------------------------------
+    dut._log.info("=== 3) NOISE AMPLITUDE SWEEP (phase_inc=2048, amp=full) ===")
+    for nz in [0, 2, 4]:        # loud, moderate, nearly off
+        await configure(master, phase_inc=2048, sig_amp_shift=0, noise_amp_shift=nz)
+        await hold_and_view(dut, master, 2048, f"noise_amp_shift={nz}")
+
+    # ---------------------------------------------------------------
+    # 4) Combinations
+    # ---------------------------------------------------------------
+    dut._log.info("=== 4) COMBINATIONS ===")
+    combos = [
+        # (phase_inc, sig_amp_shift, noise_amp_shift, description)
+        (1024, 0, 5, "slow, full amplitude, noise off"),
+        (4096, 1, 0, "fast, half amplitude, loud noise"),
+        (2048, 2, 2, "mid, quarter amplitude, moderate noise"),
+        (1024, 3, 4, "slow, eighth amplitude, light noise"),
+    ]
+    for pinc, amp, nz, desc in combos:
+        await configure(master, phase_inc=pinc, sig_amp_shift=amp, noise_amp_shift=nz)
+        await hold_and_view(dut, master, pinc, f"combo [{desc}]")
+
+    dut._log.info("Config sweep complete — open the FST to inspect the waveforms.")
