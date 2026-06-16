@@ -70,7 +70,7 @@ signal_source #(
     .N_RST     (N_RST),
     .phase_inc (phase_inc_cfg),
     .signal_amp_shift (signal_amp_cfg),
-    .noise_amp_shift  (noise_amp_cfg)
+    .noise_amp_shift  (noise_amp_cfg),
     .raddr     (reg_addr_i2c),
     .rdata     (data_out_block_b),
     .read_strobe (read_strobe_i2c),
