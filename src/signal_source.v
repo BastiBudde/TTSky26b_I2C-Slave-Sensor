@@ -63,6 +63,14 @@ module signal_source #(
         .value (w_noise)
     );
 
+    // --- Noisy sine: clean sine + saturated LFSR noise ---
+    wire [7:0] w_noisy_sine;
+    noise_mixer u_mixer (
+        .sample (w_sine),
+        .lfsr   (w_noise),
+        .out    (w_noisy_sine)
+    );
+
     // --- Register bank ---
     signal_bank #(
         .BASE_ADDR    (BASE_ADDR),
@@ -77,7 +85,7 @@ module signal_source #(
         .ch_triangle   (w_triangle),
         .ch_sawtooth   (w_sawtooth),
         .ch_square     (w_square),
-        .ch_noisy_sine (w_sine),     // placeholder until the noise step
+        .ch_noisy_sine (w_noisy_sine),
         .ch_noise      (w_noise),
         .raddr         (raddr),
         .rdata         (rdata)
