@@ -887,7 +887,7 @@ B_FIRST_DATA = 0x09     # sine; +1 cosine, +2 triangle, +3 sawtooth,
                         # +4 square, +5 noisy_sine, +6 noise
 CH_NAMES = ["sine", "cosine", "triangle", "sawtooth", "square", "noisy_sine", "noise"]
 
-N_PERIODS    = 2.2      # >= 2 periods held per configuration
+N_PERIODS    = 4      # >= 2 periods held per configuration
 DENSE_READ   = False    # True = also read channels over the bus during each hold
                         #        (shows a bus-side waveform + status flags, slower)
 
