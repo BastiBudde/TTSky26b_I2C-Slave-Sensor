@@ -15,6 +15,7 @@ PROJECT_SOURCES = 	tt_um_BastiBudde_i2c_slave_sensor.v \
 					 phase_accumulator.v \
 					 signal_bank.v \
 					 noise_mixer.v \
+					 amp_scale.v \
 					 signal_source.v \
 					 sine_lut.v\
 					 waveform_gen.v

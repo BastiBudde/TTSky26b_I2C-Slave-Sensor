@@ -29,6 +29,8 @@ wire        read_strobe_i2c;
 wire [7:0]  read_addr_i2c;
 
 wire [N_REGS_BLOCK_A*8-1:0] cfg_a_flat;
+wire [1:0] signal_amp_cfg = cfg_a_flat[2*8 +: 2];   // reg 2, low 2 bits
+wire [2:0] noise_amp_cfg  = cfg_a_flat[3*8 +: 3];   // reg 3, low 3 bits
 
 // Internal wires to connect multiple register blocks to the I2C slave
 wire [7:0] data_out_block_a, data_out_block_b, data_out_block_c;
@@ -66,7 +68,9 @@ signal_source #(
 ) signal_source_b (
     .clk       (clk),
     .N_RST     (N_RST),
-    .phase_inc (phase_inc_cfg),          // fixed for now; Block A config later
+    .phase_inc (phase_inc_cfg),
+    .signal_amp_shift (signal_amp_cfg),
+    .noise_amp_shift  (noise_amp_cfg)
     .raddr     (reg_addr_i2c),
     .rdata     (data_out_block_b),
     .read_strobe (read_strobe_i2c),
@@ -79,8 +83,8 @@ signal_source #(
 reg_block #(
     .BASE_ADDR      (BASE_ADDR_BLOCK_A),
     .N_REGS         (N_REGS_BLOCK_A),
-//  Register:        7     6     5     4     3     2    1(H)  0(L)
-    .RESET_VALUES ({8'h00,8'h00,8'h00,8'h00,8'h00,8'h00,8'h04,8'h00})
+//  Register:        7     6     5     4    3(NA) 2(SA) 1(H)  0(L)
+    .RESET_VALUES ({8'h00,8'h00,8'h00,8'h00,8'h02,8'h00,8'h04,8'h00})
 ) reg_block_a (
     .clk        (clk),
     .N_RST      (N_RST),

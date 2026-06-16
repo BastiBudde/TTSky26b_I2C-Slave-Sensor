@@ -18,6 +18,8 @@ module signal_source #(
     input  wire                 clk,
     input  wire                 N_RST,
     input  wire [ACC_WIDTH-1:0] phase_inc,   // frequency word (Block A later)
+    input  wire [1:0]           signal_amp_shift,
+    input  wire [2:0]           noise_amp_shift,
     input  wire [7:0]           raddr,
     output wire [7:0]           rdata,
     input  wire                 read_strobe,
@@ -57,7 +59,16 @@ module signal_source #(
         .square   (w_square)
     );
 
-    // --- Noise source (free-running) ---
+    // --- Amplitude scaling per channel (shared shift) ---
+    wire [7:0] s_sine, s_cosine, s_triangle, s_sawtooth, s_square;
+    amp_scale a0 (.sample(w_sine),     .shift(signal_amp_shift), .scaled(s_sine));
+    amp_scale a1 (.sample(w_cosine),   .shift(signal_amp_shift), .scaled(s_cosine));
+    amp_scale a2 (.sample(w_triangle), .shift(signal_amp_shift), .scaled(s_triangle));
+    amp_scale a3 (.sample(w_sawtooth), .shift(signal_amp_shift), .scaled(s_sawtooth));
+    amp_scale a4 (.sample(w_square),   .shift(signal_amp_shift), .scaled(s_square));
+
+
+    // --- Noise source ---
     wire [7:0] w_noise;
     lfsr8 #(.SEED(LFSR_SEED)) u_lfsr (
         .clk   (clk),
@@ -66,11 +77,15 @@ module signal_source #(
         .value (w_noise)
     );
 
-    // --- Noisy sine: clean sine + saturated LFSR noise ---
+    // --- Noise: center lfsr[5:0] to -32..+31, then attenuate by noise_amp_shift ---
+    wire signed [6:0] noise_base   = $signed({1'b0, w_noise[5:0]}) - 7'sd32;
+    wire signed [6:0] noise_scaled = noise_base >>> noise_amp_shift;
+
+    // --- Noisy sine uses the SCALED sine plus the scaled noise ---
     wire [7:0] w_noisy_sine;
     noise_mixer u_mixer (
-        .sample (w_sine),
-        .lfsr   (w_noise),
+        .noise  (noise_scaled),
+        .sample (s_sine),
         .out    (w_noisy_sine)
     );
 
@@ -83,11 +98,11 @@ module signal_source #(
         .clk           (clk),
         .N_RST         (N_RST),
         .tick          (tick),
-        .ch_sine       (w_sine),
-        .ch_cosine     (w_cosine),
-        .ch_triangle   (w_triangle),
-        .ch_sawtooth   (w_sawtooth),
-        .ch_square     (w_square),
+        .ch_sine       (s_sine),
+        .ch_cosine     (s_cosine),
+        .ch_triangle   (s_triangle),
+        .ch_sawtooth   (s_sawtooth),
+        .ch_square     (s_square),
         .ch_noisy_sine (w_noisy_sine),
         .ch_noise      (w_noise),
         .raddr         (raddr),
