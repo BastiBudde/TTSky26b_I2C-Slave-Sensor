@@ -65,7 +65,7 @@ signal_source #(
     .raddr     (reg_addr_i2c),
     .rdata     (data_out_block_b),
     .read_strobe (read_strobe_i2c),
-    .read_addr   (read_addr_i2c),
+    .read_addr   (read_addr_i2c)
 );
 
 //-----------------------------------------------------------------------
