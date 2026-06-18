@@ -4,7 +4,7 @@
 Every functional test in test.py is parametrized over 100 kHz, 400 kHz and 1 MHz bus speeds. The entire suite passing at all three speeds verifies correct operation across the I2C speed range.
 **Verifies:** [REQ-007](specification.md#req-007)
 
-
+---
 
 # Protocol conformance verifications
 ### TC-001: Write address acknowledgement and state transition
@@ -39,8 +39,7 @@ Procedure: Sends a START followed by the device address ```0x55``` with the writ
 **Pass criteria:** Read-back value equals the written value, proving the full data path and the repeated-START mechanism.  
 **Verifies:** [REQ-005](specification.md#req-005), [REQ-009](specification.md#req-009), [REQ-011](specification.md#req-011), [REQ-004](specification.md#req-004)
 
-
-
+---
 
 # Register architecture
 ### TC-006: Bulk write with address auto-increment
@@ -78,8 +77,7 @@ Procedure: Sends a START followed by the device address ```0x55``` with the writ
 **Pass criteria:** The write attempt is ACKed on the bus but the read-back value is not equal to ```0xFF```, proving the master cannot overwrite Block B.  
 **Verifies:** [REQ-012](specification.md#req-012)
 
-
-
+---
 
 # LFSR (pseudo) random number generation
 ### TC-011: LFSR activity on Block B
@@ -101,8 +99,7 @@ Procedure: Sends a START followed by the device address ```0x55``` with the writ
 **Procedure:** Writes a distinguishable pattern (```0xA0 | index```) to all eight Block A registers in a single bulk transaction, waits 5 ms while the LFSR performs several sweeps through Block B, then reads every Block A register back.  
 **Pass criteria:** Every Block A register still holds exactly its written pattern value, proving the LFSR write path never reaches Block A.  
 
-
-
+---
 
 # Stress tests
 ### TC-014: Consistency under repeated bulk reads

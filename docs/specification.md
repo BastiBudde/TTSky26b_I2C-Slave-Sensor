@@ -34,8 +34,7 @@ The slave shall interpret the least significant bit of the address byte as the d
 The slave shall operate correctly at the three standard I2C bus speeds: Standard Mode (100 kHz), Fast Mode (400 kHz), and Fast Mode Plus (1 MHz), given a system clock of 25 MHz.  
 **Validated by:** [TC-000a](verification_report.md#TC-000a)
 
-
-
+---
 
 # Register architecture
 ### REQ-008: Register block address ranges
@@ -74,9 +73,7 @@ A write transaction targeting a register address outside both block ranges (0x10
 A read transaction from an unmapped register address shall return 0x00, as a consequence of each unselected register block outputting zero and the outputs being combined by an OR reduction.  
 **Validated by:** [TC-009](verification_report.md#TC-009)
 
-
-
-
+---
 
 # LFSR (pseudo) random number generation
 ### REQ-016: LFSR drives Block B with pseudo-random data
@@ -85,8 +82,7 @@ An internal LFSR module shall continuously generate pseudo-random 8-bit values a
 Rationale: Provides a self-contained, observable "sensor" without requiring external stimulus.  
 **Validated by:** [TC-011](verification_report.md#TC-011), [TC-014](verification_report.md#TC-014)
 
-
-
+---
 
 # Robustness
 ### REQ-017: State recovery after every transaction
