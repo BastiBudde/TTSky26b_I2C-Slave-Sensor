@@ -15,3 +15,4 @@ test/sby/config/
 test/sby/config_taskbmc/
 test/sby/config_taskcover/
 *Zone.Identifier
+*.ron
