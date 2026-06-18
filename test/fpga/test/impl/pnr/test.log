@@ -1,0 +1,29 @@
+Reading netlist file: "C:\Users\Basti\Documents\001-Master\SS26-FHW\Chip_Design\fpga\test\impl\gwsynthesis\test.vg"
+Parsing netlist file "C:\Users\Basti\Documents\001-Master\SS26-FHW\Chip_Design\fpga\test\impl\gwsynthesis\test.vg" completed
+Processing netlist completed
+Reading constraint file: "C:\Users\Basti\Documents\001-Master\SS26-FHW\Chip_Design\fpga\test\src\physical_constraint.cst"
+Physical Constraint parsed completed
+Running placement......
+[10%] Placement Phase 0 completed
+[20%] Placement Phase 1 completed
+[30%] Placement Phase 2 completed
+[50%] Placement Phase 3 completed
+Running routing......
+[60%] Routing Phase 0 completed
+[70%] Routing Phase 1 completed
+[80%] Routing Phase 2 completed
+[90%] Routing Phase 3 completed
+Running timing analysis......
+[95%] Timing analysis completed
+Placement and routing completed
+Bitstream generation in progress......
+Bitstream generation completed
+Running power analysis......
+[100%] Power analysis completed
+Generate file "C:\Users\Basti\Documents\001-Master\SS26-FHW\Chip_Design\fpga\test\impl\pnr\test.power.html" completed
+Generate file "C:\Users\Basti\Documents\001-Master\SS26-FHW\Chip_Design\fpga\test\impl\pnr\test.pin.html" completed
+Generate file "C:\Users\Basti\Documents\001-Master\SS26-FHW\Chip_Design\fpga\test\impl\pnr\test.rpt.html" completed
+Generate file "C:\Users\Basti\Documents\001-Master\SS26-FHW\Chip_Design\fpga\test\impl\pnr\test.rpt.txt" completed
+Generate file "C:\Users\Basti\Documents\001-Master\SS26-FHW\Chip_Design\fpga\test\impl\pnr\test.tr.html" completed
+Thu Jun 18 16:47:27 2026
+

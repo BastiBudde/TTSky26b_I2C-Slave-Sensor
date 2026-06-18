@@ -16,3 +16,4 @@ test/sby/config_taskbmc/
 test/sby/config_taskcover/
 *Zone.Identifier
 *.ron
+test/fpga/ESP32_C6_fpga_test/build
