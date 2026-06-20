@@ -1,42 +1,53 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
-# Tiny Tapeout Verilog Project Template
+# I2C Slave Template with Emulated Sensor
 
-- [Read the documentation for project](docs/info.md)
+A I2C slave peripheral that emulates a sensor, designed as a reusable template for a real I2C sensor frontend. Built for and submitted in shuttle [Tiny Tapeout GF 26b](https://app.tinytapeout.com/shuttles/ttgf26b).
 
-## What is Tiny Tapeout?
+- [Read the project datasheet](docs/info.md)
 
-Tiny Tapeout is an educational project that aims to make it easier and cheaper than ever to get your digital and analog designs manufactured on a real chip.
+## Overview
 
-To learn more and get started, visit https://tinytapeout.com.
+The design is a synchronous I2C slave (device address `0x55`) operating across all three standard bus speeds - Standard Mode (100 kHz), Fast Mode (400 kHz) and Fast Mode Plus (1 MHz) - with a 25 MHz system clock. It exposes two register banks of eight 8-bit registers:
 
-## Set up your Verilog project
+- **Block A (`0x00`-`0x07`)** - master read/write. Configuration registers; a placeholder for the configuration interface a real sensor would expose.
+- **Block B (`0x08`-`0x0F`)** - master read-only. Driven by an internal LFSR that cyclically updates each register with pseudo-random values, emulating changing sensor data.
 
-1. Add your Verilog files to the `src` folder.
-2. Edit the [info.yaml](info.yaml) and update information about your project, paying special attention to the `source_files` and `top_module` properties. If you are upgrading an existing Tiny Tapeout project, check out our [online info.yaml migration tool](https://tinytapeout.github.io/tt-yaml-upgrade-tool/).
-3. Edit [docs/info.md](docs/info.md) and add a description of your project.
-4. Adapt the testbench to your design. See [test/README.md](test/README.md) for more information.
+A constant device signature is available at `0xF8`-`0xFF`. Unmapped reads return `0x00`; writes to read-only or unmapped addresses are acknowledged but have no effect.
 
-The GitHub action will automatically build the ASIC files using [LibreLane](https://www.zerotoasiccourse.com/terminology/librelane/).
+Replacing the LFSR with a real sensor frontend turns the design into a functional I2C sensor - that is the template idea.
 
-## Enable GitHub actions to build the results page
+## Pinout
 
-- [Enabling GitHub Pages](https://tinytapeout.com/faq/#my-github-action-is-failing-on-the-pages-part)
+| Pin | Function |
+|---|---|
+| `uio[0]` | SCL (I2C clock) |
+| `uio[3]` | SDA (I2C data) |
 
-## Resources
+External pull-up resistors (e.g. 4.7 kΩ to 3.3 V) are required on SCL and SDA.
+
+## How to test
+
+The device responds at 7-bit I2C address `0x55`. To read a register, write the register index, then issue a repeated START and read one or more bytes (the pointer auto-increments for bulk reads). To write Block A, send the register index followed by data bytes.
+
+The design was verified in simulation (cocotb) and on hardware using a Sipeed Tang Primer 25K FPGA with an ESP32-C6 as I2C master, running a test suite at all three bus speeds. See the [FPGA test report](test/fpga/fpga_test_report.md) and the [verification documents](docs/) for details.
+
+## Repository structure
+
+- `src/` - the Verilog design source
+- `docs/info.md` - project datasheet
+- `docs/specification.md`, `docs/validation.md`, `docs/verification_report.md` - requirements, validation and verification
+- `docs/fpga_report.md` - Test report for fpga 
+- `test/` - cocotb testbench
+- `test/fpga/` - FPGA project and the ESP32-C6 hardware test firmware
+
+## About Tiny Tapeout
+
+Tiny Tapeout is an educational project that makes it easier and cheaper than ever to get your digital and analog designs manufactured on a real chip. To learn more and get started, visit https://tinytapeout.com.
+
+### Resources
 
 - [FAQ](https://tinytapeout.com/faq/)
 - [Digital design lessons](https://tinytapeout.com/digital_design/)
 - [Learn how semiconductors work](https://tinytapeout.com/siliwiz/)
 - [Join the community](https://tinytapeout.com/discord)
-- [Build your design locally](https://www.tinytapeout.com/guides/local-hardening/)
-
-## What next?
-
-- [Submit your design to the next shuttle](https://app.tinytapeout.com/).
-- Edit [this README](README.md) and explain your design, how it works, and how to test it.
-- Share your project on your social network of choice:
-  - LinkedIn [#tinytapeout](https://www.linkedin.com/search/results/content/?keywords=%23tinytapeout) [@TinyTapeout](https://www.linkedin.com/company/100708654/)
-  - Mastodon [#tinytapeout](https://chaos.social/tags/tinytapeout) [@matthewvenn](https://chaos.social/@matthewvenn)
-  - X (formerly Twitter) [#tinytapeout](https://twitter.com/hashtag/tinytapeout) [@tinytapeout](https://twitter.com/tinytapeout)
-  - Bluesky [@tinytapeout.com](https://bsky.app/profile/tinytapeout.com)
